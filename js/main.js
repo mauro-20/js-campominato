@@ -32,42 +32,40 @@ var squareNumber = prompt('inserisci il numero di quadrati');
 squareGenerator(squareNumber)
 
 // genero 16 bombe
-var bombs = [1,2,3]
-// while (bombs.length < 16) {
-//   var bomb = Math.ceil(Math.random() * 100)
-//   if (!bombs.includes(bomb)) {
-//     bombs.push(bomb);
-//   }
-// }
-
+var bombs = []
+while (bombs.length < 16) {
+  var bomb = Math.ceil(Math.random() * squareNumber)
+  if (!bombs.includes(bomb)) {
+    bombs.push(bomb);
+  }
+}
+console.log(bombs.sort());
+// dichiaro l'array per memorizzare i quadrati cliccati
+var clicked = []
 
 
 // al clik di un quadrato 
 field.addEventListener('click',
   function (e) {
-    // if (!e.target.classList.contains('clicked')) {
-    //   e.target.classList.add('clicked')
-    //   alert(e.target.innerHTML)
-    // }
-    // console.log(e.target)
-    var bombs = [1, 2, 3]
+   
     var clickedSquare = parseInt(e.target.innerHTML)
-    var white = []
-    // 1.controllo che il target non sia gia presente nell'array white
-    if (!white.includes(clickedSquare)) {
+    
+    // 1.controllo che il target non sia gia presente nell'array clicked
+    if (!clicked.includes(clickedSquare)) {
       // 2.controllo che il target non sia presente nell'array bombe
       if (bombs.includes(clickedSquare)) {
-        //  2.1 se il target è presente nell'array bombe hai perso e visualizza il punteggio(lunghezza array white)
+        //  2.1 se il target è presente nell'array bombe hai perso e visualizza il punteggio(lunghezza array clicked)
         alert('hai perso')
-        console.log('punteggio: ', white.length)
+        console.log('punteggio: ', clicked.length)
       } else {
-        console.log('terzo check');
-        //  2.2 se il target non è presente nell'array bombe memorizzo il target in un array white
-        white.push(clickedSquare)
-        console.log(white)
+        //  2.2 se il target non è presente nell'array bombe memorizzo il target in un array clicked
+        clicked.push(clickedSquare)
         e.target.classList.add('clicked')
+        if (clicked.length + bombs.length == squareNumber ) {
+          alert('Hai Vinto!!!')
+        }
       }
     }
-    console.log(white)
+    console.log(clicked)
   }  
 )
