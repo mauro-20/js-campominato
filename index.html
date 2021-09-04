@@ -9,7 +9,35 @@
 </head>
 <body>
   
-  <div id="field"></div>
+  <div class="wrapper">
+    <!-- field -->
+    <div id="field"></div>
+    <!-- /field -->
+    <!-- game interface -->
+    <div class="game-interface">
+      <!-- game start -->
+      <div class="game-start">
+        <div class="select-level">
+          <label for="level">Seleziona un livello</label>
+          <select id="level">
+            <option value="easy">Facile</option>
+            <option value="medium">Medio</option>
+            <option value="hard">Difficile</option>
+          </select>
+        </div>
+        <button class="btn" id="btn-start">Gioca</button>
+      </div>
+      <!-- /game start -->
+      <!-- game result -->
+      <div class="game-result" id="game-result">
+        <h2 class="winner" id="winner-win">Hai Vinto!!!</h2>
+        <h2 class="winner" id="winner-lost">Hai Perso. Ritenta</h2>
+        <div>Punteggio: <span id="score"></span></div>
+      </div>
+      <!-- /game result -->
+    </div>
+    <!-- game interface -->
+  </div>
 
   <script src="js/main.js"></script>
 </body>

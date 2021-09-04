@@ -13,59 +13,88 @@
 /* squareGenerator genera un certo numero di quadrati
 *  @param num numero di quadrati da generare 
 */
-function squareGenerator(num) {
-  var field = document.getElementById('field');
-  
-  for (var i = 1; i <= num; i++){
-    field.innerHTML += `<div class="square">${i}</div>`
+function squareGenerator(field, num) {
+  for (var i = 1; i <= num; i++) {
+    field.innerHTML += `<div class="square" id="square${i}">${i}</div>`;
   }
-
-  field.style.width = `${Math.ceil(Math.sqrt(num)) * 100}px`
-
+  // field.style.width = `${Math.ceil(Math.sqrt(num)) * 100}px`  
 }
 
 
-// chiedo all'utente il numero di quadrati da inserire
-var squareNumber = prompt('inserisci il numero di quadrati');
+var field = document.getElementById('field');
+var gameResult = document.getElementById('game-result');
+var score = document.getElementById('score');
+var squareNumber = 0;
+var bombs = [];
+var clicked = [];
+var lost = false;
 
-// genero i quadrati
-squareGenerator(squareNumber)
 
-// genero 16 bombe
-var bombs = []
-while (bombs.length < 16) {
-  var bomb = Math.ceil(Math.random() * squareNumber)
-  if (!bombs.includes(bomb)) {
-    bombs.push(bomb);
+//al click di btn Gioca
+document.getElementById('btn-start').addEventListener('click',
+  function () {
+    //reset variabile per iniziare il gioco
+    lost = false;
+    clicked = []
+    bombs = []
+    field.innerHTML = '';
+    gameResult.classList.remove('visible')
+    // selezione del livello in base alla scelta dell'utente
+    var level = document.getElementById('level').value;
+    switch (level) {
+      case 'easy':
+        squareNumber = 100;
+        break;
+      case 'medium':
+        squareNumber = 80;
+        break;
+      case 'hard':
+        squareNumber = 50;
+        break;
+    }
+    // genero i quadrati
+    squareGenerator(field, squareNumber);
+    // genero 16 bombe
+    while (bombs.length < 16) {
+      var bomb = Math.ceil(Math.random() * squareNumber);
+      if (!bombs.includes(bomb)) {
+        bombs.push(bomb);
+      }
+    }
+    console.log(bombs.sort());
   }
-}
-console.log(bombs.sort());
-// dichiaro l'array per memorizzare i quadrati cliccati
-var clicked = []
-
+);
 
 // al clik di un quadrato 
 field.addEventListener('click',
   function (e) {
-   
-    var clickedSquare = parseInt(e.target.innerHTML)
-    
-    // 1.controllo che il target non sia gia presente nell'array clicked
-    if (!clicked.includes(clickedSquare)) {
-      // 2.controllo che il target non sia presente nell'array bombe
-      if (bombs.includes(clickedSquare)) {
-        //  2.1 se il target è presente nell'array bombe hai perso e visualizza il punteggio(lunghezza array clicked)
-        alert('hai perso')
-        console.log('punteggio: ', clicked.length)
-      } else {
-        //  2.2 se il target non è presente nell'array bombe memorizzo il target in un array clicked
-        clicked.push(clickedSquare)
-        e.target.classList.add('clicked')
-        if (clicked.length + bombs.length == squareNumber ) {
-          alert('Hai Vinto!!!')
+    console.log(e.target.id.slice(6));
+    var clickedItem = parseInt(e.target.id.slice(6));
+    if (!lost) {
+
+      // 1.controllo che il target non sia gia presente nell'array clicked
+      if (!clicked.includes(clickedItem)) {
+        // 2.controllo che il target non sia presente nell'array bombe
+        if (bombs.includes(clickedItem)) {
+          //  2.1 se il target è presente nell'array bombe hai perso e visualizza il punteggio(lunghezza array clicked)
+          lost = true;
+          document.getElementById('winner-lost').classList.add('visible');
+          score.innerHTML = clicked.length;
+          gameResult.classList.add('visible')
+        } else {
+          //  2.2 se il target non è presente nell'array bombe memorizzo il target in un array clicked
+          clicked.push(clickedItem);
+          e.target.classList.add('clicked');
+          console.log('punteggio: ', clicked);
+          if (clicked.length + bombs.length == squareNumber) {
+            document.getElementById('winner-win').classList.add('visible');
+            gameResult.classList.add('visible')
+          }
         }
       }
+    } else {
+      alert('Premi gioca per iniziare un\'altra partita');
     }
-    console.log(clicked)
-  }  
-)
+  }
+);;
+
