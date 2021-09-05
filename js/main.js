@@ -15,17 +15,19 @@
 */
 function squareGenerator(field, num) {
   for (var i = 1; i <= num; i++) {
-    field.innerHTML += `<div class="square" id="square${i}">${i}</div>`;
+    field.innerHTML += `<div class="square" id="square${i}"></div>`;
   }
-  // field.style.width = `${Math.ceil(Math.sqrt(num)) * 100}px`  
 }
 
 
 var field = document.getElementById('field');
+var winnerWin = document.getElementById('winner-win');
+var winnerLost = document.getElementById('winner-lost');
 var gameResult = document.getElementById('game-result');
 var score = document.getElementById('score');
 var squareNumber = 0;
 var bombs = [];
+var nBombs = 2;
 var clicked = [];
 var lost = false;
 
@@ -35,10 +37,17 @@ document.getElementById('btn-start').addEventListener('click',
   function () {
     //reset variabile per iniziare il gioco
     lost = false;
-    clicked = []
-    bombs = []
+    clicked = [];
+    bombs = [];
     field.innerHTML = '';
-    gameResult.classList.remove('visible')
+    score.innerHTML = '';
+    gameResult.classList.remove('visible');
+    if (winnerWin.classList.contains('visible')) {
+      winnerWin.classList.remove('visible');
+    }
+    if (winnerLost.classList.contains('visible')) {
+      winnerLost.classList.remove('visible');
+    }
     // selezione del livello in base alla scelta dell'utente
     var level = document.getElementById('level').value;
     switch (level) {
@@ -55,7 +64,7 @@ document.getElementById('btn-start').addEventListener('click',
     // genero i quadrati
     squareGenerator(field, squareNumber);
     // genero 16 bombe
-    while (bombs.length < 16) {
+    while (bombs.length < nBombs) {
       var bomb = Math.ceil(Math.random() * squareNumber);
       if (!bombs.includes(bomb)) {
         bombs.push(bomb);
@@ -68,10 +77,8 @@ document.getElementById('btn-start').addEventListener('click',
 // al clik di un quadrato 
 field.addEventListener('click',
   function (e) {
-    console.log(e.target.id.slice(6));
     var clickedItem = parseInt(e.target.id.slice(6));
     if (!lost) {
-
       // 1.controllo che il target non sia gia presente nell'array clicked
       if (!clicked.includes(clickedItem)) {
         // 2.controllo che il target non sia presente nell'array bombe
@@ -80,15 +87,16 @@ field.addEventListener('click',
           lost = true;
           document.getElementById('winner-lost').classList.add('visible');
           score.innerHTML = clicked.length;
-          gameResult.classList.add('visible')
+          e.target.classList.add('bomb');
+          // e.target.innerHTML = `<i class="fas fa-bomb"></i>`
+          gameResult.classList.add('visible');
         } else {
           //  2.2 se il target non è presente nell'array bombe memorizzo il target in un array clicked
           clicked.push(clickedItem);
           e.target.classList.add('clicked');
-          console.log('punteggio: ', clicked);
           if (clicked.length + bombs.length == squareNumber) {
             document.getElementById('winner-win').classList.add('visible');
-            gameResult.classList.add('visible')
+            gameResult.classList.add('visible');
           }
         }
       }
