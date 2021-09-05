@@ -27,7 +27,7 @@ var gameResult = document.getElementById('game-result');
 var score = document.getElementById('score');
 var squareNumber = 0;
 var bombs = [];
-var nBombs = 2;
+var nBombs = 16;
 var clicked = [];
 var lost = false;
 
@@ -70,7 +70,7 @@ document.getElementById('btn-start').addEventListener('click',
         bombs.push(bomb);
       }
     }
-    console.log(bombs.sort());
+    // console.log(bombs.sort());
   }
 );
 
